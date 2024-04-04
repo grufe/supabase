@@ -28,6 +28,10 @@ import SchemaFunctionSelector from './SchemaFunctionSelector'
 const schema = object({
   HOOKS_CUSTOM_ACCESS_TOKEN_ENABLED: boolean(),
   HOOKS_CUSTOM_ACCESS_TOKEN_URI: string(),
+  HOOKS_SEND_SMS_ENABLED: boolean(),
+  HOOKS_SEND_SMS_URI: string(),
+  HOOKS_SEND_EMAIL_ENABLED: boolean(),
+  HOOKS_SEND_EMAIL_URI: string(),
 })
 
 const formId = 'auth-basic-hooks-form'
@@ -48,6 +52,10 @@ const BasicHooksConfig = () => {
   const INITIAL_VALUES = {
     HOOK_CUSTOM_ACCESS_TOKEN_ENABLED: authConfig?.HOOK_CUSTOM_ACCESS_TOKEN_ENABLED || false,
     HOOK_CUSTOM_ACCESS_TOKEN_URI: authConfig?.HOOK_CUSTOM_ACCESS_TOKEN_URI || '',
+    HOOK_SEND_SMS_ENABLED: authConfig?.HOOK_CUSTOM_ACCESS_TOKEN_ENABLED || false,
+    HOOK_SEND_SMS_URI: authConfig?.HOOK_CUSTOM_ACCESS_TOKEN_URI || '',
+    HOOK_SEND_EMAIL_ENABLED: authConfig?.HOOK_CUSTOM_ACCESS_TOKEN_ENABLED || false,
+    HOOK_SEND_EMAIL_URI: authConfig?.HOOK_CUSTOM_ACCESS_TOKEN_URI || '',
   }
 
   const onSubmit = (values: any, { resetForm }: any) => {
@@ -55,6 +63,14 @@ const BasicHooksConfig = () => {
 
     if (payload.HOOK_CUSTOM_ACCESS_TOKEN_URI === '') {
       payload.HOOK_CUSTOM_ACCESS_TOKEN_URI = null
+    }
+
+    if (payload.HOOK_SEND_SMS_URI === '') {
+      payload.HOOK_SEND_SMS_URI = null
+    }
+
+    if (payload.HOOK_SEND_EMAIL_URI === '') {
+      payload.HOOK_SEND_EMAIL_URI = null
     }
 
     updateAuthConfig(
@@ -95,8 +111,8 @@ const BasicHooksConfig = () => {
         return (
           <>
             <FormHeader
-              title="Auth Hooks (Beta)"
-              description="Use PostgreSQL functions to customize the behavior of Supabase Auth to meet your needs."
+              title="Auth Hooks"
+              description="Use PostgreSQL functions or HTTP endpoints to customize the behavior of Supabase Auth to meet your needs."
             />
             <FormPanel
               disabled={true}
@@ -131,6 +147,48 @@ const BasicHooksConfig = () => {
                   {values.HOOK_CUSTOM_ACCESS_TOKEN_URI && (
                     <Toggle
                       id="HOOK_CUSTOM_ACCESS_TOKEN_ENABLED"
+                      size="medium"
+                      label="Enable hook"
+                      layout="flex"
+                      disabled={!canUpdateConfig}
+                    />
+                  )}
+                </FormSectionContent>
+              </FormSection>
+
+              <FormSection header={<FormSectionLabel>Send SMS Hook</FormSectionLabel>}>
+                //TODO: This should be a text entry, maybe separate section for HTTP
+                <FormSectionContent loading={isLoading}>
+                  <SchemaFunctionSelector
+                    id="HOOK_SEND_SMS_URI"
+                    descriptionText="Enter a URL to a HTTP endpoint which will run in place of an SMS Sender. It should return the success status of the SMS sent."
+                    values={values}
+                    setFieldValue={setFieldValue}
+                    disabled={!canUpdateConfig}
+                  />
+                  {values.HOOK_SNED_SMS_URI && (
+                    <Toggle
+                      id="HOOK_SEND_SMS_ENABLED"
+                      size="medium"
+                      label="Enable hook"
+                      layout="flex"
+                      disabled={!canUpdateConfig}
+                    />
+                  )}
+                </FormSectionContent>
+              </FormSection>
+              <FormSection header={<FormSectionLabel>Send Email Hook</FormSectionLabel>}>
+                <FormSectionContent loading={isLoading}>
+                  <SchemaFunctionSelector
+                    id="HOOK_SEND_EMAIL_URI"
+                    descriptionText="Enter a URL to a HTTP endpoint which will run in place of an Email Sender. It should return the success status of the email sent."
+                    values={values}
+                    setFieldValue={setFieldValue}
+                    disabled={!canUpdateConfig}
+                  />
+                  {values.HOOK_SEND_EMAIL_URI && (
+                    <Toggle
+                      id="HOOK_SEND_EMAIL_ENABLED"
                       size="medium"
                       label="Enable hook"
                       layout="flex"
