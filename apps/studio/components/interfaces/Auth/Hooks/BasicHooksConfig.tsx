@@ -9,6 +9,7 @@ import {
   Form,
   IconAlertCircle,
   Toggle,
+  Input,
 } from 'ui'
 import { boolean, object, string } from 'yup'
 
@@ -134,7 +135,14 @@ const BasicHooksConfig = () => {
               }
             >
               <FormSection
-                header={<FormSectionLabel>Customize Access Token (JWT) Claims</FormSectionLabel>}
+                header={
+                  <FormSectionLabel>
+                    Customize Access Token (JWT) Claims
+                    <>
+                      <code className="bg-blue-900 text-xs text-white mx-3">postgres</code>
+                    </>
+                  </FormSectionLabel>
+                }
               >
                 <FormSectionContent loading={isLoading}>
                   <SchemaFunctionSelector
@@ -156,17 +164,18 @@ const BasicHooksConfig = () => {
                 </FormSectionContent>
               </FormSection>
 
-              <FormSection header={<FormSectionLabel>Send SMS Hook</FormSectionLabel>}>
-                //TODO: This should be a text entry, maybe separate section for HTTP
+              <FormSection
+                header={
+                  <FormSectionLabel>
+                    Send SMS Hook
+                    <>
+                      <code className="bg-grey-900 text-xs text-black mx-3">http</code>
+                    </>
+                  </FormSectionLabel>
+                }
+              >
                 <FormSectionContent loading={isLoading}>
-                  <SchemaFunctionSelector
-                    id="HOOK_SEND_SMS_URI"
-                    descriptionText="Enter a URL to a HTTP endpoint which will run in place of an SMS Sender. It should return the success status of the SMS sent."
-                    values={values}
-                    setFieldValue={setFieldValue}
-                    disabled={!canUpdateConfig}
-                  />
-                  {values.HOOK_SNED_SMS_URI && (
+                  {values.HOOK_SEND_SMS_URI && (
                     <Toggle
                       id="HOOK_SEND_SMS_ENABLED"
                       size="medium"
@@ -175,17 +184,20 @@ const BasicHooksConfig = () => {
                       disabled={!canUpdateConfig}
                     />
                   )}
+                  <Input placeholder="http hook url" value={'test'} />
                 </FormSectionContent>
               </FormSection>
-              <FormSection header={<FormSectionLabel>Send Email Hook</FormSectionLabel>}>
+              <FormSection
+                header={
+                  <FormSectionLabel>
+                    Send Email Hook
+                    <>
+                      <code className="bg-grey-900 text-xs text-black mx-3">http</code>
+                    </>
+                  </FormSectionLabel>
+                }
+              >
                 <FormSectionContent loading={isLoading}>
-                  <SchemaFunctionSelector
-                    id="HOOK_SEND_EMAIL_URI"
-                    descriptionText="Enter a URL to a HTTP endpoint which will run in place of an Email Sender. It should return the success status of the email sent."
-                    values={values}
-                    setFieldValue={setFieldValue}
-                    disabled={!canUpdateConfig}
-                  />
                   {values.HOOK_SEND_EMAIL_URI && (
                     <Toggle
                       id="HOOK_SEND_EMAIL_ENABLED"
@@ -195,6 +207,7 @@ const BasicHooksConfig = () => {
                       disabled={!canUpdateConfig}
                     />
                   )}
+                  <Input placeholder="http hook url" value={'test'} />
                 </FormSectionContent>
               </FormSection>
               <div className="border-t border-muted"></div>
