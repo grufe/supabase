@@ -147,7 +147,16 @@ const EnterpriseHooksConfig = () => {
                 />
               )}
               <div className={isTeamsEnterprisePlan ? '' : 'opacity-50'}>
-                <FormSection header={<FormSectionLabel>MFA Verification Attempt</FormSectionLabel>}>
+                <FormSection
+                  header={
+                    <FormSectionLabel>
+                      MFA Verification Attempt
+                      <>
+                        <code className="bg-blue-900 text-xs text-white mx-3">postgres</code>
+                      </>
+                    </FormSectionLabel>
+                  }
+                >
                   <FormSectionContent loading={isLoading}>
                     <SchemaFunctionSelector
                       id="HOOK_MFA_VERIFICATION_ATTEMPT_URI"
@@ -170,7 +179,14 @@ const EnterpriseHooksConfig = () => {
                 <div className="border-t border-muted"></div>
 
                 <FormSection
-                  header={<FormSectionLabel>Password Verification Attempt</FormSectionLabel>}
+                  header={
+                    <FormSectionLabel>
+                      Password Verification Attempt
+                      <>
+                        <code className="bg-blue-900 text-xs text-white mx-3">postgres</code>
+                      </>
+                    </FormSectionLabel>
+                  }
                 >
                   <FormSectionContent loading={isLoading}>
                     <SchemaFunctionSelector
