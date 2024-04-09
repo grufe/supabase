@@ -1,6 +1,6 @@
 import { PermissionAction } from '@supabase/shared-types/out/constants'
 import { useParams } from 'common'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import {
   AlertDescription_Shadcn_,
@@ -25,6 +25,7 @@ import { useAuthConfigQuery } from 'data/auth/auth-config-query'
 import { useAuthConfigUpdateMutation } from 'data/auth/auth-config-update-mutation'
 import { useCheckPermissions } from 'hooks'
 import SchemaFunctionSelector from './SchemaFunctionSelector'
+import HookSelector from './HookSelector'
 
 const schema = object({
   HOOKS_CUSTOM_ACCESS_TOKEN_ENABLED: boolean(),
@@ -38,6 +39,7 @@ const schema = object({
 const formId = 'auth-basic-hooks-form'
 
 const BasicHooksConfig = () => {
+  const [selectedHookType, setSelectedHookType] = useState('http');
   const { ref: projectRef } = useParams()
   const {
     data: authConfig,
@@ -126,9 +128,9 @@ const BasicHooksConfig = () => {
                     handleReset={handleReset}
                     disabled={!canUpdateConfig}
                     helper={
-                      !canUpdateConfig
-                        ? 'You need additional permissions to update authentication settings'
-                        : undefined
+                    !canUpdateConfig
+                    ? 'You need additional permissions to update authentication settings'
+                    : undefined
                     }
                   />
                 </div>
@@ -138,29 +140,42 @@ const BasicHooksConfig = () => {
                 header={
                   <FormSectionLabel>
                     Customize Access Token (JWT) Claims
-                    <>
-                      <code className="bg-blue-900 text-xs text-white mx-3">postgres</code>
-                    </>
                   </FormSectionLabel>
                 }
               >
                 <FormSectionContent loading={isLoading}>
-                  <SchemaFunctionSelector
-                    id="HOOK_CUSTOM_ACCESS_TOKEN_URI"
-                    descriptionText="Select the function to be called by Supabase Auth each time a new JWT is created. It should return the claims you wish to be present in the JWT."
-                    values={values}
-                    setFieldValue={setFieldValue}
-                    disabled={!canUpdateConfig}
-                  />
-                  {values.HOOK_CUSTOM_ACCESS_TOKEN_URI && (
-                    <Toggle
-                      id="HOOK_CUSTOM_ACCESS_TOKEN_ENABLED"
-                      size="medium"
-                      label="Enable hook"
-                      layout="flex"
+                  <HookSelector name={'Hook Type'} options={[{ displayName: 'HTTP Hook', value: 'http'}, {displayName: 'Postgres Hook', value: 'postgres'}]} selectedOption={selectedHookType} onSelectOption={(opt)=> setSelectedHookType(opt) }/>
+
+                  {selectedHookType === 'postgres' ? (
+
+                    <SchemaFunctionSelector
+                      id="HOOK_CUSTOM_ACCESS_TOKEN_URI"
+                      descriptionText="Select the function to be called by Supabase Auth each time a new JWT is created. It should return the claims you wish to be present in the JWT."
+                      values={values}
+                      setFieldValue={setFieldValue}
                       disabled={!canUpdateConfig}
-                    />
-                  )}
+                    />) :
+                   <Input
+                     readOnly
+                     disabled
+                     className="input-mono"
+                     copy={true}
+                     label={'HTTP Hook Secret'}
+                     reveal={true}
+                     value={'test'}
+                     onChange={() => {}}
+                   />
+
+                  }
+          {values.HOOK_CUSTOM_ACCESS_TOKEN_URI && (
+            <Toggle
+              id="HOOK_CUSTOM_ACCESS_TOKEN_ENABLED"
+              size="medium"
+              label="Enable hook"
+              layout="flex"
+              disabled={!canUpdateConfig}
+            />
+          )}
                 </FormSectionContent>
               </FormSection>
 
@@ -184,7 +199,17 @@ const BasicHooksConfig = () => {
                       disabled={!canUpdateConfig}
                     />
                   )}
-                  <Input placeholder="http hook url" value={'test'} />
+                  <Input  label={'HTTP Hook URL'} placeholder="http hook url" value={'test'} />
+                  <Input
+                    readOnly
+                    disabled
+                    className="input-mono"
+                    copy={true}
+                    label={'HTTP Hook Secret'}
+                    reveal={true}
+                    value={'test'}
+                    onChange={() => {}}
+                  />
                 </FormSectionContent>
               </FormSection>
               <FormSection
@@ -207,7 +232,17 @@ const BasicHooksConfig = () => {
                       disabled={!canUpdateConfig}
                     />
                   )}
-                  <Input placeholder="http hook url" value={'test'} />
+                  <Input  label={'HTTP Hook URL'} placeholder="http hook url" value={'test'} />
+                  <Input
+                    readOnly
+                    disabled
+                    className="input-mono"
+                    copy={true}
+                    label={'HTTP Hook Secret'}
+                    reveal={true}
+                    value={'test'}
+                    onChange={() => {}}
+                  />
                 </FormSectionContent>
               </FormSection>
               <div className="border-t border-muted"></div>
