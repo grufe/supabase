@@ -39,7 +39,6 @@ const schema = object({
 const formId = 'auth-basic-hooks-form'
 
 const BasicHooksConfig = () => {
-  const [selectedHookType, setSelectedHookType] = useState('http');
   const { ref: projectRef } = useParams()
   const {
     data: authConfig,
@@ -128,67 +127,38 @@ const BasicHooksConfig = () => {
                     handleReset={handleReset}
                     disabled={!canUpdateConfig}
                     helper={
-                    !canUpdateConfig
-                    ? 'You need additional permissions to update authentication settings'
-                    : undefined
+                      !canUpdateConfig
+                        ? 'You need additional permissions to update authentication settings'
+                        : undefined
                     }
                   />
                 </div>
               }
             >
               <FormSection
-                header={
-                  <FormSectionLabel>
-                    Customize Access Token (JWT) Claims
-                  </FormSectionLabel>
-                }
+                header={<FormSectionLabel>Customize Access Token (JWT) Claims</FormSectionLabel>}
               >
                 <FormSectionContent loading={isLoading}>
-                  <HookSelector name={'Hook Type'} options={[{ displayName: 'HTTP Hook', value: 'http'}, {displayName: 'Postgres Hook', value: 'postgres'}]} selectedOption={selectedHookType} onSelectOption={(opt)=> setSelectedHookType(opt) }/>
+                  <HookSelector
+                    id={'HOOK_CUSTOM_ACCESS_TOKEN_URI'}
+                    descriptionText={
+                      'Select the function to be called by Supabase Auth each time a new JWT is created. It should return the claims you wish to be present in the JWT.'
+                    }
+                  />
 
-                  {selectedHookType === 'postgres' ? (
-
-                    <SchemaFunctionSelector
-                      id="HOOK_CUSTOM_ACCESS_TOKEN_URI"
-                      descriptionText="Select the function to be called by Supabase Auth each time a new JWT is created. It should return the claims you wish to be present in the JWT."
-                      values={values}
-                      setFieldValue={setFieldValue}
+                  {values.HOOK_CUSTOM_ACCESS_TOKEN_URI && (
+                    <Toggle
+                      id="HOOK_CUSTOM_ACCESS_TOKEN_ENABLED"
+                      size="medium"
+                      label="Enable hook"
+                      layout="flex"
                       disabled={!canUpdateConfig}
-                    />) :
-                   <Input
-                     readOnly
-                     disabled
-                     className="input-mono"
-                     copy={true}
-                     label={'HTTP Hook Secret'}
-                     reveal={true}
-                     value={'test'}
-                     onChange={() => {}}
-                   />
-
-                  }
-          {values.HOOK_CUSTOM_ACCESS_TOKEN_URI && (
-            <Toggle
-              id="HOOK_CUSTOM_ACCESS_TOKEN_ENABLED"
-              size="medium"
-              label="Enable hook"
-              layout="flex"
-              disabled={!canUpdateConfig}
-            />
-          )}
+                    />
+                  )}
                 </FormSectionContent>
               </FormSection>
 
-              <FormSection
-                header={
-                  <FormSectionLabel>
-                    Send SMS Hook
-                    <>
-                      <code className="bg-grey-900 text-xs text-black mx-3">http</code>
-                    </>
-                  </FormSectionLabel>
-                }
-              >
+              <FormSection header={<FormSectionLabel>Send SMS Hook</FormSectionLabel>}>
                 <FormSectionContent loading={isLoading}>
                   {values.HOOK_SEND_SMS_URI && (
                     <Toggle
@@ -199,7 +169,11 @@ const BasicHooksConfig = () => {
                       disabled={!canUpdateConfig}
                     />
                   )}
-                  <Input  label={'HTTP Hook URL'} placeholder="http hook url" value={'test'} />
+                  <Input
+                    label={'HTTP Hook URL'}
+                    placeholder="http hook url"
+                    value={'https://www.app.supabase.co/functions/v1/sms_sender'}
+                  />
                   <Input
                     readOnly
                     disabled
@@ -212,16 +186,7 @@ const BasicHooksConfig = () => {
                   />
                 </FormSectionContent>
               </FormSection>
-              <FormSection
-                header={
-                  <FormSectionLabel>
-                    Send Email Hook
-                    <>
-                      <code className="bg-grey-900 text-xs text-black mx-3">http</code>
-                    </>
-                  </FormSectionLabel>
-                }
-              >
+              <FormSection header={<FormSectionLabel>Send Email Hook</FormSectionLabel>}>
                 <FormSectionContent loading={isLoading}>
                   {values.HOOK_SEND_EMAIL_URI && (
                     <Toggle
@@ -232,7 +197,11 @@ const BasicHooksConfig = () => {
                       disabled={!canUpdateConfig}
                     />
                   )}
-                  <Input  label={'HTTP Hook URL'} placeholder="http hook url" value={'test'} />
+                  <Input
+                    label={'HTTP Hook URL'}
+                    placeholder="http hook url"
+                    value={'https://www.app.supabase.co/functions/v1/email_sender'}
+                  />
                   <Input
                     readOnly
                     disabled
@@ -240,7 +209,7 @@ const BasicHooksConfig = () => {
                     copy={true}
                     label={'HTTP Hook Secret'}
                     reveal={true}
-                    value={'test'}
+                    value={'https://www.app.supabase.co/functions/v1/sms_sender'}
                     onChange={() => {}}
                   />
                 </FormSectionContent>
