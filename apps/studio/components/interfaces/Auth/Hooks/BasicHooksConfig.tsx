@@ -144,6 +144,7 @@ const BasicHooksConfig = () => {
                     descriptionText={
                       'Select the function to be called by Supabase Auth each time a new JWT is created. It should return the claims you wish to be present in the JWT.'
                     }
+                    hookType={'postgres'}
                     values={values}
                     setFieldValue={setFieldValue}
                   />
@@ -171,20 +172,14 @@ const BasicHooksConfig = () => {
                       disabled={!canUpdateConfig}
                     />
                   )}
-                  <Input
-                    label={'HTTP Hook URL'}
-                    placeholder="http hook url"
-                    value={'https://www.app.supabase.co/functions/v1/sms_sender'}
-                  />
-                  <Input
-                    readOnly
-                    disabled
-                    className="input-mono"
-                    copy={true}
-                    label={'HTTP Hook Secret'}
-                    reveal={true}
-                    value={'test'}
-                    onChange={() => {}}
+                  <HookSelector
+                    id={'hook_send_sms_uri'}
+                    descriptiontext={
+                      'select the function to be called by supabase auth each time a new jwt is created. it should return the claims you wish to be present in the jwt.'
+                    }
+                    values={values}
+                    hookType={'http'}
+                    setfieldvalue={setFieldValue}
                   />
                 </FormSectionContent>
               </FormSection>
@@ -199,20 +194,15 @@ const BasicHooksConfig = () => {
                       disabled={!canUpdateConfig}
                     />
                   )}
-                  <Input
-                    label={'HTTP Hook URL'}
-                    placeholder="http hook url"
-                    value={'https://www.app.supabase.co/functions/v1/email_sender'}
-                  />
-                  <Input
-                    readOnly
-                    disabled
-                    className="input-mono"
-                    copy={true}
-                    label={'HTTP Hook Secret'}
-                    reveal={true}
-                    value={'https://www.app.supabase.co/functions/v1/sms_sender'}
-                    onChange={() => {}}
+
+                  <HookSelector
+                    id={'HOOK_SEND_SMS_URI'}
+                    descriptionText={
+                      'Select the function to be called by Supabase Auth each time a new JWT is created. It should return the claims you wish to be present in the JWT.'
+                    }
+                    values={values}
+                    hookType={'http'}
+                    setFieldValue={setFieldValue}
                   />
                 </FormSectionContent>
               </FormSection>

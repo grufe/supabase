@@ -34,6 +34,7 @@ export function HookSelector<Opt extends ComboBoxOption>({
   values,
   setFieldValue,
   descriptionText,
+  hookType,
 }: {
   id: string
   isLoading: boolean
@@ -42,17 +43,21 @@ export function HookSelector<Opt extends ComboBoxOption>({
   setFieldValue: (field: string, value: any) => void
   disabled?: boolean
   descriptionText: string
+  hookType?: string
   className?: string
 }) {
   const canUpdateConfig = useCheckPermissions(PermissionAction.UPDATE, 'custom_config_gotrue')
-  const [selectedHookType, setSelectedHookType] = useState('http')
+  const [selectedHookType, setSelectedHookType] = useState(hookType)
   const [HTTPHookURI, setHTTPHookURI] = useState('')
   const [open, setOpen] = useState(false)
   const name = 'Hook Type'
-  const options = [
+  const initialOptions = [
     { displayName: 'HTTP Hook', value: 'http' },
     { displayName: 'Postgres Hook', value: 'postgres' },
   ]
+  const options =
+    hookType === '' ? initialOptions : initialOptions.filter((option) => option.value == hookType)
+
   const selectedOptionDisplayName = options.find(
     (option) => option.value === selectedHookType
   )?.displayName
