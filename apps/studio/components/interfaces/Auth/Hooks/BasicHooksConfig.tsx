@@ -144,6 +144,8 @@ const BasicHooksConfig = () => {
                     descriptionText={
                       'Select the function to be called by Supabase Auth each time a new JWT is created. It should return the claims you wish to be present in the JWT.'
                     }
+                    values={values}
+                    setFieldValue={setFieldValue}
                   />
 
                   {values.HOOK_CUSTOM_ACCESS_TOKEN_URI && (
