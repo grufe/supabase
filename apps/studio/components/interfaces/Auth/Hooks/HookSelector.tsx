@@ -15,6 +15,7 @@ import {
   CommandGroup_Shadcn_ as CommandGroup,
   cn,
   ScrollArea,
+  Toggle,
   Input,
 } from 'ui'
 import SchemaFunctionSelector from './SchemaFunctionSelector'
@@ -61,10 +62,18 @@ export function HookSelector<Opt extends ComboBoxOption>({
   const selectedOptionDisplayName = options.find(
     (option) => option.value === selectedHookType
   )?.displayName
-  console.log(HTTPHookURI)
 
   return (
     <>
+      {(values[`${id}_URI`] || selectedHookType === 'http') && (
+        <Toggle
+          id={`${id}_ENABLED`}
+          size="medium"
+          label="Enable hook"
+          layout="flex"
+          disabled={!canUpdateConfig}
+        />
+      )}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -121,28 +130,30 @@ export function HookSelector<Opt extends ComboBoxOption>({
       </Popover>
       {selectedHookType === 'postgres' ? (
         <SchemaFunctionSelector
-          id={id}
+          id={`${id}_POSTGRES_FUNCTION_SELECTOR`}
           descriptionText={descriptionText}
           values={values}
           setFieldValue={setFieldValue}
-          disabled={!canUpdateConfig}
+          disabled={disabled}
         />
       ) : selectedHookType === 'http' ? (
         <>
           <Input
+            id={`${id}_URI]`}
             label={'HTTP Hook URL'}
             placeholder="https://app.supabase.co/functions/v1/hello_world"
             value={HTTPHookURI}
             onChange={({ target: { value } }) => setHTTPHookURI(value)}
           />
           <Input
+            id={`${id}_SECRETS]`}
             readOnly
             disabled
             className="input-mono"
             copy={true}
             label={'HTTP Hook Secret'}
             reveal={true}
-            value={''}
+            value={values[`${id}_SECRETS`]}
           />
         </>
       ) : null}

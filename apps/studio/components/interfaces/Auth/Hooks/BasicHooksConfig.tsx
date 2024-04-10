@@ -50,7 +50,6 @@ const BasicHooksConfig = () => {
   const { mutate: updateAuthConfig, isLoading: isUpdatingConfig } = useAuthConfigUpdateMutation()
   const canUpdateConfig = useCheckPermissions(PermissionAction.UPDATE, 'custom_config_gotrue')
 
-  // TODO: Remove as any once these properties are defined in Auth Config types
   const INITIAL_VALUES = {
     HOOK_CUSTOM_ACCESS_TOKEN_ENABLED: authConfig?.HOOK_CUSTOM_ACCESS_TOKEN_ENABLED || false,
     HOOK_CUSTOM_ACCESS_TOKEN_URI: authConfig?.HOOK_CUSTOM_ACCESS_TOKEN_URI || '',
@@ -140,7 +139,7 @@ const BasicHooksConfig = () => {
               >
                 <FormSectionContent loading={isLoading}>
                   <HookSelector
-                    id={'HOOK_CUSTOM_ACCESS_TOKEN_URI'}
+                    id={'HOOK_CUSTOM_ACCESS_TOKEN'}
                     descriptionText={
                       'Select the function to be called by Supabase Auth each time a new JWT is created. It should return the claims you wish to be present in the JWT.'
                     }
@@ -148,61 +147,34 @@ const BasicHooksConfig = () => {
                     values={values}
                     setFieldValue={setFieldValue}
                   />
-
-                  {values.HOOK_CUSTOM_ACCESS_TOKEN_URI && (
-                    <Toggle
-                      id="HOOK_CUSTOM_ACCESS_TOKEN_ENABLED"
-                      size="medium"
-                      label="Enable hook"
-                      layout="flex"
-                      disabled={!canUpdateConfig}
-                    />
-                  )}
                 </FormSectionContent>
               </FormSection>
 
               <FormSection header={<FormSectionLabel>Send SMS Hook</FormSectionLabel>}>
                 <FormSectionContent loading={isLoading}>
-                  {values.HOOK_SEND_SMS_URI && (
-                    <Toggle
-                      id="HOOK_SEND_SMS_ENABLED"
-                      size="medium"
-                      label="Enable hook"
-                      layout="flex"
-                      disabled={!canUpdateConfig}
-                    />
-                  )}
                   <HookSelector
-                    id={'hook_send_sms_uri'}
-                    descriptiontext={
+                    id={'HOOK_SEND_SMS'}
+                    descriptionText={
                       'select the function to be called by supabase auth each time a new jwt is created. it should return the claims you wish to be present in the jwt.'
                     }
                     values={values}
                     hookType={'http'}
-                    setfieldvalue={setFieldValue}
+                    setFieldValue={setFieldValue}
+                    disabled={!canUpdateConfig}
                   />
                 </FormSectionContent>
               </FormSection>
               <FormSection header={<FormSectionLabel>Send Email Hook</FormSectionLabel>}>
                 <FormSectionContent loading={isLoading}>
-                  {values.HOOK_SEND_EMAIL_URI && (
-                    <Toggle
-                      id="HOOK_SEND_EMAIL_ENABLED"
-                      size="medium"
-                      label="Enable hook"
-                      layout="flex"
-                      disabled={!canUpdateConfig}
-                    />
-                  )}
-
                   <HookSelector
-                    id={'HOOK_SEND_SMS_URI'}
+                    id={'HOOK_SEND_EMAIL'}
                     descriptionText={
                       'Select the function to be called by Supabase Auth each time a new JWT is created. It should return the claims you wish to be present in the JWT.'
                     }
                     values={values}
                     hookType={'http'}
                     setFieldValue={setFieldValue}
+                    disabled={!canUpdateConfig}
                   />
                 </FormSectionContent>
               </FormSection>

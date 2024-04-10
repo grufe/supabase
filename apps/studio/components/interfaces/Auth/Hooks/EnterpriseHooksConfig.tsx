@@ -26,6 +26,7 @@ import { useAuthConfigUpdateMutation } from 'data/auth/auth-config-update-mutati
 import { useOrgSubscriptionQuery } from 'data/subscriptions/org-subscription-query'
 import { useCheckPermissions, useSelectedOrganization } from 'hooks'
 import SchemaFunctionSelector from './SchemaFunctionSelector'
+import HookSelector from './HookSelector'
 
 const schema = object({
   HOOKS_MFA_VERIFICATION_ATTEMPT_ENABLED: boolean(),
@@ -60,11 +61,10 @@ const EnterpriseHooksConfig = () => {
     HOOK_MFA_VERIFICATION_ATTEMPT_ENABLED:
       authConfig?.HOOK_MFA_VERIFICATION_ATTEMPT_ENABLED || false,
     HOOK_MFA_VERIFICATION_ATTEMPT_URI: authConfig?.HOOK_MFA_VERIFICATION_ATTEMPT_URI || '',
-    // remove as any when the types are merged in
     HOOK_PASSWORD_VERIFICATION_ATTEMPT_ENABLED:
-      (authConfig as any)?.HOOK_PASSWORD_VERIFICATION_ATTEMPT_ENABLED || false,
+      authConfig?.HOOK_PASSWORD_VERIFICATION_ATTEMPT_ENABLED || false,
     HOOK_PASSWORD_VERIFICATION_ATTEMPT_URI:
-      (authConfig as any)?.HOOK_PASSWORD_VERIFICATION_ATTEMPT_URI || '',
+      authConfig?.HOOK_PASSWORD_VERIFICATION_ATTEMPT_URI || '',
   }
 
   const onSubmit = (values: any, { resetForm }: any) => {
@@ -147,64 +147,33 @@ const EnterpriseHooksConfig = () => {
                 />
               )}
               <div className={isTeamsEnterprisePlan ? '' : 'opacity-50'}>
-                <FormSection
-                  header={
-                    <FormSectionLabel>
-                      MFA Verification Attempt
-                      <>
-                        <code className="bg-blue-900 text-xs text-white mx-3">postgres</code>
-                      </>
-                    </FormSectionLabel>
-                  }
-                >
+                <FormSection header={<FormSectionLabel>MFA Verification Attempt</FormSectionLabel>}>
                   <FormSectionContent loading={isLoading}>
                     <SchemaFunctionSelector
-                      id="HOOK_MFA_VERIFICATION_ATTEMPT_URI"
+                      id="HOOK_MFA_VERIFICATION_ATTEMPT"
                       descriptionText="Select the function to be called by Supabase Auth each time a user tries to verify an MFA factor. Return a decision on whether to reject the attempt and future ones, or to allow the user to keep trying."
                       values={values}
                       setFieldValue={setFieldValue}
                       disabled={!canUpdateConfig || !isTeamsEnterprisePlan}
                     />
-                    {values.HOOK_MFA_VERIFICATION_ATTEMPT_URI && (
-                      <Toggle
-                        id="HOOK_MFA_VERIFICATION_ATTEMPT_ENABLED"
-                        size="small"
-                        label="Enable hook"
-                        layout="flex"
-                        disabled={!canUpdateConfig || !isTeamsEnterprisePlan}
-                      />
-                    )}
                   </FormSectionContent>
                 </FormSection>
                 <div className="border-t border-muted"></div>
 
                 <FormSection
-                  header={
-                    <FormSectionLabel>
-                      Password Verification Attempt
-                      <>
-                        <code className="bg-blue-900 text-xs text-white mx-3">postgres</code>
-                      </>
-                    </FormSectionLabel>
-                  }
+                  header={<FormSectionLabel>Password Verification Attempt</FormSectionLabel>}
                 >
                   <FormSectionContent loading={isLoading}>
-                    <SchemaFunctionSelector
-                      id="HOOK_PASSWORD_VERIFICATION_ATTEMPT_URI"
-                      descriptionText="Select the function to be called by Supabase Auth each time a user tries to sign in with a password. Return a decision whether to allow the user to reject the attempt, or to allow the user to keep trying."
+                    <HookSelector
+                      id="HOOK_PASSWORD_VERIFICATION_ATTEMPT"
+                      descriptionText={
+                        'Select the function to be called by Supabase Auth each time a user tries to sign in with a password. Return a decision whether to allow the user to reject the attempt, or to allow the user to keep trying.Select the function to be called by Supabase Auth each time a user tries to sign in with a password. Return a decision whether to allow the user to reject the attempt, or to allow the user to keep trying.'
+                      }
                       values={values}
+                      hookType={'postgres'}
                       setFieldValue={setFieldValue}
                       disabled={!canUpdateConfig || !isTeamsEnterprisePlan}
                     />
-                    {values.HOOK_PASSWORD_VERIFICATION_ATTEMPT_URI && (
-                      <Toggle
-                        id="HOOK_PASSWORD_VERIFICATION_ATTEMPT_ENABLED"
-                        size="small"
-                        label="Enable hook"
-                        layout="flex"
-                        disabled={!canUpdateConfig || !isTeamsEnterprisePlan}
-                      />
-                    )}
                   </FormSectionContent>
                 </FormSection>
               </div>
