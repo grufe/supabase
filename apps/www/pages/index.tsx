@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic'
 import content from '~/data/home/content'
 import Layout from '~/components/Layouts/Default'
 import Hero from '~/components/Hero/Hero'
+import _EmilAndEriksComponent from '~/components/_EmilAndEriksComponent'
 
 const Products = dynamic(() => import('~/components/Products/index'))
 const BuiltExamples = dynamic(() => import('components/BuiltWithSupabase/index'))
@@ -16,6 +17,7 @@ const Index = () => {
   return (
     <Layout>
       <Hero />
+      <_EmilAndEriksComponent />
       <Products {...content.productsSection} />
       <TwitterSocialSection />
       <BuiltExamples />
